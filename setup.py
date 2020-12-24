@@ -1,21 +1,18 @@
 import setuptools
-import ultra
+import u as u
 
 with open('README.md', 'r') as file:
     long_description = file.read()
 
-with open('requirements.txt', 'r') as file:
-    dependencies = file.read().split('\n')[:-1]
-
 setuptools.setup(
-    name=ultra.APP_NAME,
-    version=ultra.APP_VERSION,
-    author=ultra.APP_AUTHOR,
-    license=ultra.APP_LICENSE,
-    description=ultra.APP_DESCRIPTION,
+    name=u.APP_NAME,
+    version=u.APP_VERSION,
+    author=u.APP_AUTHOR,
+    license=u.APP_LICENSE,
+    description=u.APP_DESCRIPTION,
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url=ultra.APP_URL,
+    url=u.APP_URL,
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -24,11 +21,27 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Information Analysis"
     ],
+    install_requires=[
+        "loguru",
+        "Flask",
+        "Flask-RESTful",
+        "Flask-SQLAlchemy",
+        "psycopg2",
+        "python-dateutil",
+        "ballcosmos",
+        "pass-calculator"
+    ],
+    extras_require={
+        "dev": [
+            "pytest",
+            "wheel"
+        ]
+    },
     install_requires=dependencies,
     python_requires='>=3.8.5',
     entry_points={
         "console_scripts": [
-            '{} = ultra.__main__:main'.format(ultra.APP_NAME),
+            '{} = ultra.__main__:main'.format(u.APP_NAME),
         ]
     }
 )
