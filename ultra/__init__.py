@@ -5,7 +5,7 @@ ULTRA_USERNAME_PATTERN = '[a-zA-Z ]+'
 # Old Version: 1.3.1
 MAJOR = 0
 MINOR = 0
-PATCH = 1
+PATCH = 2
 
 APP_NAME = 'uniclogs-ultra'
 APP_VERSION = f'{MAJOR}.{MINOR}.{PATCH}'
