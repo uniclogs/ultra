@@ -39,7 +39,11 @@ class PassesEndpoint(Resource):
                                    .order_by(models.Tle.time_added.desc()) \
                                    .first()
         except Exception as e:
-            return {'message': 'There was a problem fetching the latests TLEs. Please report this to the server admin with this message: {}'.format(e)}, 500
+            return {
+                'message': 'There was a problem fetching the latests TLEs.'
+                ' Please report this to the server admin with'
+                f' this message: {e}'
+            }, 500
         tle = [latest_tle.first_line, latest_tle.second_line]
 
         # Get already approved passes list from the DB and remove them
@@ -47,11 +51,13 @@ class PassesEndpoint(Resource):
         approved_passes = db.session.query(models.Pass) \
                                     .with_lockmode('read') \
                                     .join(models.Request,
-                                          models.Pass.uid == models.Request.pass_uid) \
+                                          models.Pass.uid
+                                          == models.Request.pass_uid) \
                                     .filter(models.Request.is_approved) \
                                     .all()
         # Convert the list of Pass objects to OrbitalPass objects
-        approved_passes = list(map(lambda x: x.to_orbital_pass(), approved_passes))
+        approved_passes = list(map(lambda x: x.to_orbital_pass(),
+                                   approved_passes))
 
         # Call pass calculator
         now = datetime.now()

@@ -58,7 +58,10 @@ class UserEndpoint(Resource):
             return json.dumps(user, cls=UserTokenJsonEncoder), 201
         except Exception as e:
             logger.error(e)
-            return {"Error": "There was a problem fetching the tokens. Please report this to the server admin with the message: {}".format(e)}, 500
+            return {
+                "Error": "There was a problem fetching the tokens. Please"
+                f" report this to the server admin with the message: {e}"
+            }, 500
 
     def post(self) -> [str, int]:
         """
@@ -90,4 +93,8 @@ class UserEndpoint(Resource):
         except Exception as e:
             db.session.rollback()
             logger.error(e)
-            return {"message": "There was a problem with trying to create or submit a new user. Please contact the server admin with this message: {}".format(e)}, 500
+            return {
+                "message": "There was a problem with trying to create or"
+                " submit a new user. Please contact the server admin with this"
+                " message: {}".format(e)
+            }, 500

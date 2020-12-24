@@ -17,6 +17,6 @@ class SignalEndpoint(Resource):
                             type=inputs.regex(ultra.ULTRA_TOKEN_PATTERN),
                             required=True,
                             location="headers")
-        args = parser.parse_args()
+        # args = parser.parse_args()
 
         return {'message': 'Updates received, thanks for the tip pardner'}, 200

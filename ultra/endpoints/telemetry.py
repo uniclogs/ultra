@@ -1,6 +1,5 @@
 from flask_restful import Resource
 from loguru import logger
-import ultra
 from ultra.database import db
 from ultra.models import Telemetry
 
@@ -19,4 +18,8 @@ class TelemetryEndpoint(Resource):
             return list(map(lambda x: x.to_json(), telemetries)), 200
         except Exception as e:
             logger.error(e)
-            return {"message": "There was a problem fetching the telemetry. Please report this to the server admin with this message: {}".format(e)}, 500
+            return {
+                "message": "There was a problem fetching the telemetry."
+                " Please report this to the server admin with this"
+                f" message: {e}"
+            }, 500

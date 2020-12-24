@@ -29,7 +29,7 @@ class RequestEndpoint(Resource):
                             required=True,
                             location="headers")
         args = parser.parse_args()
-        user_request_list = []  # List of user request to return
+        request_list = []  # List of user request to return
 
         # Authenticate the incoming token
         try:
@@ -40,7 +40,11 @@ class RequestEndpoint(Resource):
             if(token is None):
                 return {'message': 'Invalid token'}, 401
         except Exception as e:
-            return {'message': 'There was a problem trying to fetch the user tokens. Please report this to the server admin with this message: {}'.format(e)}
+            return {
+                'message': 'There was a problem trying to fetch the user'
+                ' tokens. Please report this to the server admin with this'
+                f' message: {e}'
+            }
 
         try:
             result = db.session.query(Pass, Request) \
@@ -49,7 +53,10 @@ class RequestEndpoint(Resource):
                                .filter(Request.user_token == args['token']) \
                                .all()
         except Exception as e:
-            return {"Error": "There was a problem fetching requests. Please report this to the server admin with this message: {}".format(e)}, 500
+            return {
+                "error": "There was a problem fetching requests. Please report"
+                f" this to the server admin with this message: {e}"
+            }, 500
 
         # Make a nice list of dictionaries for easy conversion to JSON string
         for p, r in result:
@@ -62,14 +69,14 @@ class RequestEndpoint(Resource):
                     horizon_deg=0.0
                     )
 
-            user_request_list.append({"request_id": r.uid,
-                                      "is_approved": r.is_approved,
-                                      "is_sent": r.is_sent,
-                                      "pass_data": pass_data,
-                                      "created_date": r.created_date.isoformat(),
-                                      "updated_date": r.updated_date.isoformat(),
-                                      "observation_type": r.observation_type})
-        return user_request_list, 200
+            request_list.append({"request_id": r.uid,
+                                 "is_approved": r.is_approved,
+                                 "is_sent": r.is_sent,
+                                 "pass_data": pass_data,
+                                 "created_date": r.created_date.isoformat(),
+                                 "updated_date": r.updated_date.isoformat(),
+                                 "observation_type": r.observation_type})
+        return request_list, 200
 
     def post(self) -> [str, int]:
         """
@@ -114,12 +121,17 @@ class RequestEndpoint(Resource):
         try:
             token_exists = db.session.query(UserTokens) \
                                      .with_lockmode('read') \
-                                     .filter(UserTokens.token == args['token']) \
+                                     .filter(UserTokens.token
+                                             == args['token']) \
                                      .first() is not None
             if(not token_exists):
                 return {'message': 'Invalid token'}, 401
         except Exception as e:
-            return {'message': 'There was a problem trying to fetch the user tokens. Please report this to the server admin with this message: {}'.format(e)}, 500
+            return {
+                'message': 'There was a problem trying to fetch the user'
+                ' tokens. Please report this to the server admin with this'
+                f' message: {e}'
+            }, 500
 
         # Make datetime object from the HTTP args
         try:
@@ -152,13 +164,18 @@ class RequestEndpoint(Resource):
                 new_pass = db.session.query(Pass) \
                                      .with_lockmode('read') \
                                      .filter(Pass.latitude == args["latitude"],
-                                             Pass.longitude == args["longitude"],
+                                             Pass.longitude
+                                             == args["longitude"],
                                              Pass.start_time == aos_utc) \
                                      .first()
             else:
                 new_pass.uid = db_pass.uid
         except Exception as e:
-            return {"message": "There was a problem trying to create or submit a new pass. Please report this to the server admin with this message: {}".format(e)}, 500
+            return {
+                "message": "There was a problem trying to create or submit a"
+                " new pass. Please report this to the server admin with"
+                f" this message: {e}"
+            }, 500
 
         # Create the new request and submit it to the DB
         try:
@@ -174,4 +191,8 @@ class RequestEndpoint(Resource):
                     "request_id": new_request.uid}, 201
         except Exception as e:
             db.session.rollback()
-            return {'message': 'There was a problem trying to create or submit a new request. Please report this to the server admin with this message: {}'.format(e)}, 500
+            return {
+                'message': 'There was a problem trying to create or submit a'
+                ' new request. Please report this to the server admin with'
+                f' this message: {e}'
+            }, 500

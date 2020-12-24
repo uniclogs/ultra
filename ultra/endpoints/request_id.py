@@ -37,7 +37,8 @@ class RequestIdEndpoint(Resource):
         try:
             pass_request = db.session.query(Pass, Request) \
                                      .with_lockmode('read') \
-                                     .join(Request, Pass.uid == Request.pass_uid) \
+                                     .join(Request, Pass.uid
+                                           == Request.pass_uid) \
                                      .filter(Request.uid == request_id) \
                                      .one()
         except Exception as e:
@@ -116,7 +117,9 @@ class RequestIdEndpoint(Resource):
                                .one()
         except Exception as e:
             logger.error(e)
-            return {"Error": "No matching pass or wrong assigned pass_uid"}, 400
+            return {
+                "Error": "No matching pass or wrong assigned pass_uid"
+            }, 400
 
         try:
             latest_tle_time = db.session.query(func.max(Tle.time_added)) \
@@ -167,8 +170,10 @@ class RequestIdEndpoint(Resource):
 
         db.session.commit()
 
-        return {"message": "Succes: request modified".format(request_id),
-                "user": result}, 201
+        return {
+            "message": f"request with id {request_id} modified",
+            "user": result
+        }, 201
 
     def delete(self, request_id: int) -> [str, int]:
         """
@@ -194,9 +199,15 @@ class RequestIdEndpoint(Resource):
                 request_result.is_approved = False
             db.session.commit()
 
-            return {"message": "Succes: canceled request".format(request_id),
-                    "request": request_result}, 200
+            return {
+                "message": f"Succes: canceled request with id {request_id}",
+                "request": request_result
+            }, 200
         except Exception as e:
             db.session.rollback()
             logger.error(e)
-            return {"message": "There was a problem trying to delete the request. Please report this to the server admin with this message: {}".format(e)}, 500
+            return {
+                "message": "There was a problem trying to delete the request."
+                " Please report this to the server admin with this"
+                f" message: {e}"
+            }, 500
