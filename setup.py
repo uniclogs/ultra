@@ -1,5 +1,5 @@
 import setuptools
-import u as u
+import ultra as u
 
 with open('README.md', 'r') as file:
     long_description = file.read()
@@ -33,15 +33,19 @@ setuptools.setup(
     ],
     extras_require={
         "dev": [
+            "setuptools",
+            "wheel",
             "pytest",
-            "wheel"
+            "flake8",
+            "twine",
+            "sphinx",
+            "sphinx_rtd_theme",
         ]
     },
-    install_requires=dependencies,
     python_requires='>=3.8.5',
     entry_points={
         "console_scripts": [
-            '{} = ultra.__main__:main'.format(u.APP_NAME),
+            f'{u.APP_NAME} = ultra.__main__:main'
         ]
     }
 )

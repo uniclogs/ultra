@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import os
 import getopt
@@ -60,7 +59,7 @@ def usage():
     print(message)
 
 
-if __name__ == "__main__":
+def main() -> None:
     pid_file = "/run/ultrad.pid"
     daemon_flag = False
 
