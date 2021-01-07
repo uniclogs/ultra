@@ -1,0 +1,9 @@
+[Unit]
+Description=uniclogs ultra gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+User=http
+
+[Install]
+WantedBy=sockets.target
